@@ -19,6 +19,8 @@ class TicTacToeViewModel: ObservableObject {
     
     var currentPlayer: PlayerType
     var initialPlayer: PlayerType = .oPlayer
+    var notPlaying: Bool = false
+    var filledBoardCells: Array<Model.BoardCell> = []
     
     init() {
         model = TicTacToeViewModel.initGame()
@@ -38,15 +40,36 @@ class TicTacToeViewModel: ObservableObject {
                         model.modifyCell(state: StateOfCell.oState, index: index)
                         currentPlayer = .xPlayer
                     }
+                    filledBoardCells.append(chosenCell)
                 }
             }
         }
+        if gameIsOver() {
+            notPlaying = true
+        }
+    }
+    
+    func gameIsOver() -> Bool {
+        if filledBoardCells.count == 9 {
+            return true
+        }
+        return false
     }
     
     private static func initGame() -> Model {
         TicTacToeModel<StateOfCell, PlayerType>.init {
             return StateOfCell.noState
         }
+    }
+    
+    func startNewGame() {
+        model = TicTacToeViewModel.initGame()
+        if initialPlayer == .xPlayer {
+            initialPlayer = .oPlayer
+        } else {
+            initialPlayer = .xPlayer
+        }
+        filledBoardCells.removeAll()
     }
     
     enum StateOfCell: String {
