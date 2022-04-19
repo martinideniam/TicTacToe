@@ -15,11 +15,17 @@ struct TicTacToeModel<StateType, PlayerType> {
         boardCells = []
         for _ in 0..<9 {
             let newState = generateState()
-            boardCells.append(BoardCell(state: newState))
+            boardCells.append(BoardCell(state: newState, id: UUID().uuidString))
         }
     }
     
-    struct BoardCell {
+    mutating func modifyCell(state: StateType, index: Int) {
+        boardCells[index].state = state
+        print(boardCells[index].state)
+    }
+    
+    struct BoardCell: Identifiable {
         var state: StateType
+        var id: String
     }
 }
