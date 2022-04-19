@@ -11,17 +11,41 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Label()
+            LabelOfTheGame()
+                .padding(.top, 20)
+                Spacer()
+            CurrentPlayer()
             Board()
+                .padding(.top, 40)
+                Spacer()
+            
         }
     }
 }
 
-struct Label: View {
+struct LabelOfTheGame: View {
     var body: some View {
-        Text("Крестики Нолики")
+        VStack {
+            Text("Крестики")
+                .fontWeight(.heavy)
+                .font(.system(size: 30))
+            Text("NOLIKI")
+                .font(.system(size: 20))
+                .foregroundColor(.red)
+                .fontWeight(.bold)
+        }
+        
+
     }
 }
+
+struct CurrentPlayer: View {
+    var body: some View {
+        Text("Игрок X")
+            .fontWeight(.heavy)
+    }
+}
+
 
 struct Board: View {
     var body: some View {
@@ -58,7 +82,7 @@ struct Cell: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .frame(width: 100, height: 100, alignment: .center)
+                .frame(width: 90, height: 100, alignment: .center)
             if let someState = state {
                 Text(someState)
                     .foregroundColor(.white)
