@@ -109,10 +109,10 @@ struct Cell: View {
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(lineWidth: 3)
                         .frame(width: 60, height: 60, alignment: .center)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("Color"))
                     Text(cell.state.rawValue)
                         .font(.system(size: 30))
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("Color"))
                         .bold()
                 }
         }
