@@ -21,7 +21,6 @@ struct TicTacToeModel<StateType, PlayerType> {
     
     mutating func modifyCell(state: StateType, index: Int) {
         boardCells[index].state = state
-        print(boardCells[index].state)
     }
     
     struct BoardCell: Identifiable {

@@ -7,9 +7,6 @@
 
 import SwiftUI
 
-
-
-
 struct ContentView: View {
     @ObservedObject var viewModel: TicTacToeViewModel
     var body: some View {
@@ -20,15 +17,26 @@ struct ContentView: View {
             CurrentPlayer(player: viewModel.currentPlayer)
             Board(viewModel: viewModel)
                 .padding(.top, 40)
-                Spacer()
-                .alert("GAME IS OVER", isPresented: $viewModel.notPlaying) {
-                    Button("START AGAIN", role: .cancel) {
+            Spacer()
+            .alert(
+                "ИГРА ЗАКОНЧЕНА",
+                isPresented: $viewModel.notPlaying,
+                actions: {
+                    Button("ЕЩЕ РАЗ", role: .cancel, action: {
                         viewModel.startNewGame()
+                    })
+                },
+                message: {
+                    switch viewModel.message {
+                    case .draw: Text("Ничья.")
+                        case .oWon: Text("O-игрок выйграл.")
+                        case .xWon: Text("X-игрок выйграл.")
                     }
-                }
+                })
         }
     }
 }
+
 
 struct LabelOfTheGame: View {
     var body: some View {
@@ -99,11 +107,13 @@ struct Cell: View {
             } label: {
                 ZStack {
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke()
-                        .frame(width: 65, height: 65, alignment: .center)
+                        .stroke(lineWidth: 3)
+                        .frame(width: 60, height: 60, alignment: .center)
                         .foregroundColor(.black)
                     Text(cell.state.rawValue)
+                        .font(.system(size: 30))
                         .foregroundColor(.black)
+                        .bold()
                 }
         }
     }

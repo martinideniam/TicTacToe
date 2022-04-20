@@ -19,7 +19,8 @@ class TicTacToeViewModel: ObservableObject {
     
     var currentPlayer: PlayerType
     var initialPlayer: PlayerType = .oPlayer
-    var notPlaying: Bool = false
+    @Published var notPlaying: Bool = false
+    var message: Message = .draw
     var filledBoardCells: Array<Model.BoardCell> = []
     
     init() {
@@ -32,11 +33,9 @@ class TicTacToeViewModel: ObservableObject {
             for index in boardCells.indices {
                 if boardCells[index].id == chosenCell.id {
                     if currentPlayer == .xPlayer {
-                        print("X")
                         model.modifyCell(state: StateOfCell.xState, index: index)
                         currentPlayer = .oPlayer
                     } else {
-                        print("O")
                         model.modifyCell(state: StateOfCell.oState, index: index)
                         currentPlayer = .xPlayer
                     }
@@ -44,9 +43,79 @@ class TicTacToeViewModel: ObservableObject {
                 }
             }
         }
+        if someoneWon() {
+            notPlaying = true
+        }
         if gameIsOver() {
             notPlaying = true
         }
+    }
+    
+    func someoneWon() -> Bool {
+        var combinationOfCells = [String]()
+        for cell in boardCells {
+            if cell.state == .xState {
+                combinationOfCells.append("x")
+            } else if cell.state == .oState {
+                combinationOfCells.append("o")
+            } else {
+                combinationOfCells.append("-")
+            }
+        }
+        if let winner = checkIfCombinationHasWinner(combination: combinationOfCells) {
+            if winner == "x" {
+                message = .xWon
+            } else {
+                message = .oWon
+            }
+            return true
+        }
+        return false
+    }
+    
+    func checkIfCombinationHasWinner(combination: Array<String>) -> String? {
+        var whoWon: String?
+        if combination[0] == combination[1] && combination[0] == combination[2] {
+            if combination[0] != "-" {
+                whoWon = combination[0]
+            }
+        }
+        if combination[3] == combination[4] && combination[3] == combination[5] {
+            if combination[3] != "-" {
+                whoWon = combination[3]
+            }
+        }
+        if combination[6] == combination[7] && combination[6] == combination[8] {
+            if combination[6] != "-" {
+                whoWon = combination[6]
+            }
+        }
+        if combination[0] == combination[4] && combination[0] == combination[8] {
+            if combination[0] != "-" {
+                whoWon = combination[0]
+            }
+        }
+        if combination[2] == combination[4] && combination[2] == combination[6] {
+            if combination[2] != "-" {
+                whoWon = combination[2]
+            }
+        }
+        if combination[0] == combination[3] && combination[0] == combination[6] {
+            if combination[0] != "-" {
+                whoWon = combination[0]
+            }
+        }
+        if combination[1] == combination[4] && combination[1] == combination[7] {
+            if combination[1] != "-" {
+                whoWon = combination[1]
+            }
+        }
+        if combination[2] == combination[5] && combination[2] == combination[8] {
+            if combination[2] != "-" {
+                whoWon = combination[2]
+            }
+        }
+        return whoWon
     }
     
     func gameIsOver() -> Bool {
@@ -69,6 +138,7 @@ class TicTacToeViewModel: ObservableObject {
         } else {
             initialPlayer = .xPlayer
         }
+        message = .draw
         filledBoardCells.removeAll()
     }
     
@@ -78,5 +148,9 @@ class TicTacToeViewModel: ObservableObject {
     
     enum PlayerType: String {
         case xPlayer = "X", oPlayer = "O"
+    }
+    
+    enum Message {
+        case draw, xWon, oWon
     }
 }
